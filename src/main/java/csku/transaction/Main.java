@@ -13,24 +13,24 @@ public class Main {
         Note note = new Note();
 
         while (program) {
-            System.out.println("โปรแกรม รายรับรายจ่าย");
-            System.out.print("เพิ่มรายการ พิม 1 | แสดงรายการที่บันทึก พิม 2 | ออกจากโปรแกรม พิม 3 : ");
+            System.out.println("Program EXPENSE INCOME,");
+            System.out.print("Add List select 1 | Show List select 2 | Exit Program select 3 : ");
             int input1 = Integer.parseInt(br.readLine());
             System.out.println("-----------------------------------------------------------------");
             if(input1 == 1){
                 while (true){
-                    System.out.println("ต้องการเพิ่มรายรับหรือจ่าย");
-                    System.out.print("เพิ่มรายรับ พิม 1 | เพิ่มรายจ่าย พิม 2 | ออก พิม 3 : ");
+                    System.out.println("Add EXPENSE or INCOME");
+                    System.out.print("Add INCOME select 1 | Add EXPENSE select 2 | Exit select 3 : ");
                     int inputAdd = Integer.parseInt(br.readLine());
                     System.out.println("-----------------------------------------------------------------");
                     //income
                     if(inputAdd == 1){
                         while (true) {
-                            System.out.println("เพิ่มรายรับ");
-                            System.out.print("1.รายละเอียด ตัวอย่างเช่น เงินเดือน,ค่าขนม : ");
+                            System.out.println("Add INCOME");
+                            System.out.print("1.Detail : ");
                             String income1 = br.readLine();
 
-                            System.out.print("2.จำนวนเงิน : ");
+                            System.out.print("2.Amount : ");
                             int income2 = Integer.parseInt(br.readLine());
                             if (income1.length() > 0 && income2 != 0) {
                                 note.setLst_note(new Transaction(income1, Transaction.TRANSACTION_TYPE.INCOME, income2));
@@ -41,7 +41,7 @@ public class Main {
                                 break;
                             }
                             else {
-                                System.out.println("กรอกข้อมูลผิดพลาด");
+                                System.out.println("Error");
                                 System.out.println("-----------------------------------------------------------------");
                             }
                         }
@@ -49,11 +49,11 @@ public class Main {
                     //expense
                     else if(inputAdd == 2){
                         while (true) {
-                            System.out.println("เพิ่มรายจ่าย");
-                            System.out.print("1.รายละเอียด ตัวอย่างเช่น น้ำ,เดินทาง : ");
+                            System.out.println("Add EXPENSE");
+                            System.out.print("1.Detail : ");
                             String expense1 = br.readLine();
 
-                            System.out.print("2.จำนวนเงิน : ");
+                            System.out.print("2.Amount : ");
                             int expense2 = Integer.parseInt(br.readLine());
                             if (expense1.length() > 0 && expense2 != 0) {
                                 note.setLst_note(new Transaction(expense1, Transaction.TRANSACTION_TYPE.EXPENSE, expense2));
@@ -64,7 +64,7 @@ public class Main {
                                 break;
                             }
                             else {
-                                System.out.println("กรอกข้อมูลผิดพลาด");
+                                System.out.println("Error");
                                 System.out.println("-----------------------------------------------------------------");
                             }
                         }
@@ -73,37 +73,33 @@ public class Main {
                         break;
                     }
                     else{
-                        System.out.println(".: กรุณา พิมหมายเลขใหม่ :.");
+                        System.out.println(".: Number Wrong :.");
                         System.out.println("-----------------------------------------------------------------");
                     }
                 }
             }
             else if(input1 == 2){
-                while (true) {
                     if(note.getLst_Note().size()==0){
-                        System.out.println(".: ไม่รายการ รายรับ และ รายจ่าย :.");
+                        System.out.println(".: Not have List EXPENSE INCOME:.");
                         System.out.println("-----------------------------------------------------------------");
-                        break;
                     }
                     else{
-                        System.out.println(".: รายการ รายรับ และ รายจ่าย :.");
+                        System.out.println(".: List INCOME and EXPENSE :.");
                         for(int i =0;i<note.getLst_Note().size();i++){
                             System.out.println(note.getLst_Note().get(i).toString());
                         }
                         System.out.printf("Total Amount: %d",balance.getBalance());
                         System.out.println();
                         System.out.println("-----------------------------------------------------------------");
-                        break;
                     }
-                }
             }
             else if(input1 == 3){
                 program = false;
-                System.out.println(".: ออกจากระบบ :.");
+                System.out.println(".: Exit :.");
                 System.out.println("-----------------------------------------------------------------");
             }
             else{
-                System.out.println(".: กรุณา พิมหมายเลขใหม่ :.");
+                System.out.println(".: Select New Number :.");
                 System.out.println("-----------------------------------------------------------------");
             }
 
