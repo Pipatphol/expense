@@ -8,10 +8,41 @@ import java.io.InputStreamReader;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        SaveAndEditFileTxt saveAndEditFileTxt = new SaveAndEditFileTxt();
         boolean program = true;
         Balance balance = new Balance(0);
         Note note = new Note();
         int index;
+
+        if(saveAndEditFileTxt.OpenFile().size() > 2) {
+            int count = 0;
+            for (String[] str : saveAndEditFileTxt.OpenFile()) {
+                if (count > 1 && count != saveAndEditFileTxt.OpenFile().size() - 1) {
+                    if (str[1].equals("INCOME")) {
+                        String income1 = str[2];
+                        int income2 = Integer.parseInt(str[3]);
+                        if (income1.length() > 0 && income2 != 0) {
+                            Transaction t = new Transaction(income1, Transaction.TRANSACTION_TYPE.INCOME, income2);
+                            t.setDate(str[4]);
+                            note.setLst_note(t, "income");
+                            balance.income(income2);
+
+                        }
+                    }
+                    else {
+                        String expense1 = str[2];
+                        int expense2 = Integer.parseInt(str[3]);
+                        if (expense1.length() > 0 && expense2 != 0) {
+                            Transaction t = new Transaction(expense1, Transaction.TRANSACTION_TYPE.EXPENSE, expense2);
+                            t.setDate(str[4]);
+                            note.setLst_note(t, "expense");
+                            balance.expense(expense2);
+                        }
+                    }
+                }
+                count++;
+            }
+        }
 
         while (program) {
             System.out.println("Program EXPENSE INCOME,");
@@ -88,8 +119,9 @@ public class Main {
                     }
                     else{
                         System.out.println(".: List INCOME and EXPENSE :.");
+                        System.out.println("ID | Type | Detail| Amount | Date ");
                         for(int i =0;i<note.getLst_Note().size();i++){
-                            System.out.println((i+1)+": "+note.getLst_Note().get(i).toString());
+                            System.out.println((i+1)+" | "+note.getLst_Note().get(i).toString());
                         }
                         System.out.printf("Total Amount: %d",balance.getBalance());
                         System.out.println();
@@ -171,6 +203,8 @@ public class Main {
             }
             else if(input1 == 4){
                 program = false;
+                saveAndEditFileTxt.createFile(note.getLst_Note(),"Total Amount: "+balance.getBalance());
+                System.out.println("---Save File---");
                 System.out.println(".: Exit :.");
                 System.out.println("-----------------------------------------------------------------");
             }

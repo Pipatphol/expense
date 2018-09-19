@@ -25,6 +25,7 @@ public class Balance {
         this.lstExpense.add(data);
     }
 
+
     public int totalIncomeExpense(String data){
         if(data.equals("income")){
         income = 0;
