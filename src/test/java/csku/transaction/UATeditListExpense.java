@@ -7,7 +7,8 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         format = {"pretty", "html:target/cucumber"},
-        features = {"classpath:features/addNewListExpense.feature"}
+        features = {"classpath:features/editListExpense.feature"}
 )
-public class UATaddNewListExpense {
+
+public class UATeditListExpense {
 }

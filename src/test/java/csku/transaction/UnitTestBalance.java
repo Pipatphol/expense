@@ -31,4 +31,12 @@ public class UnitTestBalance {
         assertEquals(0,balance.getBalance());
     }
 
+    @Test
+    void editLstBalance(){
+        balance.income(200);
+        balance.expense(200);
+        assertEquals(0,balance.getBalance());
+
+
+    }
 }

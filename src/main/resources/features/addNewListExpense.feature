@@ -7,13 +7,14 @@ Scenario: Add new income
     Then total is 500
 
 Scenario: Add new expense
-    When I record expense is out with detail is Mc amount 100 baht
-    Then total is -100
+    When I record expense is in with detail is by kfc amount 200 baht
+    Then total is -200
 
-Scenario: Add new income and new expense list
+Scenario: Add income and expense
     When I record income is in with detail is by dad amount 500 baht
-    And I record expense is out with detail is Mc amount 100 baht
-    Then total is 400
+    When I record expense is in with detail is by kfc amount 200 baht
+    Then total is 300
+
 
 
 
