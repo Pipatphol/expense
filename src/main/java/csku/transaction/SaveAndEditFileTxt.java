@@ -15,7 +15,7 @@ public class SaveAndEditFileTxt {
             lst.add(transactions.get(i).toStringTxtForSave((i+1)+""));
         }
         try {
-            File file = new File("E:\\SE\\expense\\txt\\expense.txt");
+            File file = new File("txt\\expense.txt");
             output = new BufferedWriter(new FileWriter(file));
             output.write(text);
             output.newLine();
@@ -36,7 +36,7 @@ public class SaveAndEditFileTxt {
     }
 
     public ArrayList<String[]> OpenFile() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("E:\\SE\\expense\\txt\\expense.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("txt\\expense.txt"));
         try {
             ArrayList<String[]> lst = new ArrayList<String[]>();
             StringBuilder sb = new StringBuilder();
