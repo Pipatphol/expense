@@ -30,4 +30,20 @@ public class Transaction {
     public String toString() {
         return ("Type: "+this.type+" | Detail: "+ this.detail+" | Amount: "+this.amount+" | Date: "+this.date);
     }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
 }

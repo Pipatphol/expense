@@ -1,14 +1,20 @@
 package csku.transaction;
 
+import DB.DatabaseConnector;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
         SaveAndEditFileTxt saveAndEditFileTxt = new SaveAndEditFileTxt();
+        Main main = new Main();
         boolean program = true;
         Balance balance = new Balance(0);
         Note note = new Note();
@@ -70,6 +76,7 @@ public class Main {
 //                                System.out.println(note.getLst_Note().get(0).toString());
                                 balance.income(income2);
 //                                System.out.println(balance.getBalance());
+                                main.addTrasactionDB(note.getLst_Note());
                                 System.out.println("-----------------------------------------------------------------");
                                 break;
                             }
@@ -93,6 +100,7 @@ public class Main {
 //                                System.out.println(note.getLst_Note().get(0).toString());
                                 balance.expense(expense2);
 //                                System.out.println(balance.getBalance());
+                                main.addTrasactionDB(note.getLst_Note());
                                 System.out.println("-----------------------------------------------------------------");
                                 break;
                             }
@@ -118,14 +126,70 @@ public class Main {
                         System.out.println("-----------------------------------------------------------------");
                     }
                     else{
-                        System.out.println(".: List INCOME and EXPENSE :.");
-                        System.out.println("ID | Type | Detail| Amount | Date ");
-                        for(int i =0;i<note.getLst_Note().size();i++){
-                            System.out.println((i+1)+" | "+note.getLst_Note().get(i).toString());
+                        while (true) {
+                            System.out.println("Show EXPENSE or INCOME");
+                            System.out.print("Show INCOME select 1 | Show EXPENSE select 2 | Show All select 3 | Exit select 4 : ");
+                            int inputShow = Integer.parseInt(br.readLine());
+                            System.out.println("-----------------------------------------------------------------");
+                            if(inputShow == 1){
+                                ArrayList<TransactionDB> t = main.getTrasactionDBBytype("INCOME");
+                                if(t.size() >= 0){
+                                    System.out.println(".: List INCOME :.");
+                                    System.out.println("ID | Type | Detail| Amount | Date ");
+                                    int amountIncome = 0;
+
+                                    for(int i =0;i<t.size();i++){
+                                        System.out.println((i+1)+" | "+t.get(i).toString());
+                                        amountIncome+=t.get(i).getAmount();
+                                    }
+                                    System.out.printf("Total Amount: %d",amountIncome);
+                                    System.out.println();
+                                    System.out.println("-----------------------------------------------------------------");
+                                }
+                                else {
+                                    System.out.println(".: Not have List INCOME:.");
+                                    System.out.println("-----------------------------------------------------------------");
+                                }
+
+                            }
+                            else if(inputShow == 2){
+                                ArrayList<TransactionDB> t = main.getTrasactionDBBytype("EXPENSE");
+                                if(t.size() >= 0){
+                                    System.out.println(".: List EXPENSE :.");
+                                    System.out.println("ID | Type | Detail| Amount | Date ");
+                                    int amountExpense = 0;
+                                    for(int i =0;i<t.size();i++){
+                                        System.out.println((i+1)+" | "+t.get(i).toString());
+                                        amountExpense-=t.get(i).getAmount();
+                                    }
+                                    System.out.printf("Total Amount: %d",amountExpense);
+                                    System.out.println();
+                                    System.out.println("-----------------------------------------------------------------");
+                                }
+                                else {
+                                    System.out.println(".: Not have List EXPENSE:.");
+                                    System.out.println("-----------------------------------------------------------------");
+                                }
+
+                            }
+                            else if(inputShow == 3){
+                                System.out.println(".: List INCOME and EXPENSE :.");
+                                System.out.println("ID | Type | Detail| Amount | Date ");
+                                for(int i =0;i<note.getLst_Note().size();i++){
+                                    System.out.println((i+1)+" | "+note.getLst_Note().get(i).toString());
+                                }
+                                System.out.printf("Total Amount: %d",balance.getBalance());
+                                System.out.println();
+                                System.out.println("-----------------------------------------------------------------");
+                            }
+                            else if(inputShow == 4){
+                                break;
+                            }
+                            else{
+                                System.out.println(".: Select New Number :.");
+                                System.out.println("-----------------------------------------------------------------");
+                            }
                         }
-                        System.out.printf("Total Amount: %d",balance.getBalance());
-                        System.out.println();
-                        System.out.println("-----------------------------------------------------------------");
                     }
             }
             // Edit
@@ -156,6 +220,7 @@ public class Main {
                                     note.editLst_note(income0-1,new Transaction(income1, Transaction.TRANSACTION_TYPE.INCOME, income2));
                                     balance.editLstBalance("income",index,income2);
 //                                System.out.println(balance.getBalance());
+                                    main.addTrasactionDB(note.getLst_Note());
                                     System.out.println("-----------------------------------------------------------------");
                                     break;
                                 }
@@ -181,6 +246,7 @@ public class Main {
                                     note.editLst_note(expense0-1,new Transaction(expense1, Transaction.TRANSACTION_TYPE.EXPENSE, expense2));
                                     balance.editLstBalance("expense",index,expense2);
 //                                System.out.println(balance.getBalance());
+                                    main.addTrasactionDB(note.getLst_Note());
                                     System.out.println("-----------------------------------------------------------------");
                                     break;
                                 }
@@ -204,6 +270,7 @@ public class Main {
             else if(input1 == 4){
                 program = false;
                 saveAndEditFileTxt.createFile(note.getLst_Note(),"Total Amount: "+balance.getBalance());
+                main.addTrasactionDB(note.getLst_Note());
                 System.out.println("---Save File---");
                 System.out.println(".: Exit :.");
                 System.out.println("-----------------------------------------------------------------");
@@ -216,4 +283,63 @@ public class Main {
 
         }
     }
+    public void addTrasactionDB(ArrayList<Transaction> data){
+        deletTrasactionDB();
+        try {
+            DatabaseConnector db = new DatabaseConnector();
+            for(Transaction t:data){
+                db.insertTransaction(t.getDetail(),t.getType(),t.getDate(),t.getAmount());
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+    public void deletTrasactionDB(){
+
+        try {
+            DatabaseConnector db = new DatabaseConnector();
+            db.deleteTransactionALL();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    public ArrayList<TransactionDB> getTrasactionDBALL(){
+        ArrayList<TransactionDB> t = new ArrayList<>();
+
+        try {
+            DatabaseConnector db = new DatabaseConnector();
+            t = db.getTransaction();
+
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return t;
+    }
+
+    public ArrayList<TransactionDB> getTrasactionDBBytype(String type){
+        ArrayList<TransactionDB> t = new ArrayList<>();
+
+        try {
+            DatabaseConnector db = new DatabaseConnector();
+            t = db.getTransactionByType(type);
+
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return t;
+    }
+
+
 }
